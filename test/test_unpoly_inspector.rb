@@ -21,14 +21,14 @@ class TestUnpolyInspector < Minitest::Test
   end
 
   def test_targeteh_with_html_always_true
-    request = mock_request({ "HTTP_X_UP_TARET" => "html" })
+    request = mock_request({ "HTTP_X_UP_TARGET" => "html" })
     inspector = Inspector.new(request)
 
     assert inspector.target?("foo")
   end
 
   def test_targeteh_with_body_mostly_true
-    request = mock_request({ "HTTP_X_UP_TARET" => "body" })
+    request = mock_request({ "HTTP_X_UP_TARGET" => "body" })
     inspector = Inspector.new(request)
 
     assert inspector.target?("div")
