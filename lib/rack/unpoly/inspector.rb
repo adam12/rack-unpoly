@@ -1,14 +1,18 @@
 # frozen-string-literal: true
 require "forwardable"
 
-module Rack
-  module Unpoly
+module Rack # :nodoc:
+  module Unpoly # :nodoc:
+    # Easily inspect the Unpoly environment of the current request.
+    # Inspectors are not normally instantiated by users, but accessed
+    # through +env["rack.unpoly"]+ or one of the convenience wrappers
+    # for Roda and Sinatra.
     class Inspector
       extend Forwardable
 
-      def_delegators :request, :get_header
+      def_delegators :request, :get_header # :nodoc:
 
-      attr_reader :request
+      attr_reader :request # :nodoc:
 
       def initialize(request) # :nodoc:
         @request = request
@@ -63,7 +67,7 @@ module Rack
         get_header("HTTP_X_UP_VALIDATE")
       end
 
-      def query_target(actual_target, tested_target)
+      def query_target(actual_target, tested_target) # :nodoc:
         if up?
           if actual_target == tested_target
             true

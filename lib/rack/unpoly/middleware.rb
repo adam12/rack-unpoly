@@ -1,14 +1,33 @@
 # frozen-string-literal: true
 require_relative "inspector"
 
-module Rack
+module Rack # :nodoc:
   module Unpoly
+    # Rack Middleware that implements the server protocol expected by Unpoly,
+    # and provides an entry point into the Rack::Unpoly::Inspector for the current
+    # request.
+    #
+    # = Accessing the Rack::Unpoly::Inspector
+    #
+    # An inspector for the current request is available inside +env["rack.unpoly"]+.
+    # You can access any of the inspector methods through this env variable.
+    #
+    #   env["rack.unpoly"].up?
+    #
+    # = Middleware Usage Example
+    #
+    #   require "rack"
+    #   require "rack/unpoly/middleware"
+    #
+    #   use Rack::Unpoly::Middleware
+    #
+    #   run ->(env) { [200, {}, ["Hello World"]] }
     class Middleware
-      def initialize(app)
+      def initialize(app) # :nodoc:
         @app = app
       end
 
-      def call(env)
+      def call(env) # :nodoc:
         request = Rack::Request.new(env)
         env["rack.unpoly"] = Inspector.new(request)
 
@@ -18,6 +37,10 @@ module Rack
         [status, headers, response]
       end
 
+      private
+
+      # Implement the *Unpoly* server protocol.
+      # Used internally by the middleware. Not required for normal use.
       def setup_protocol(request, headers)
         headers["X-Up-Location"] = request.url
         headers["X-Up-Method"] = request.request_method
