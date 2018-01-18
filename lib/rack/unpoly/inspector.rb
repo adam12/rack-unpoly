@@ -48,9 +48,9 @@ module Rack
       end
 
       # Set the page title.
-      # def title=(new_title)
-      #   response.headers["X-Up-Title"] = new_title
-      # end
+      def set_title(response, new_title)
+        response.headers["X-Up-Title"] = new_title
+      end
 
       # Determine if this is a validate request.
       def validate?

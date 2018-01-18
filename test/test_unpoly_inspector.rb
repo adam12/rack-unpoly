@@ -5,13 +5,13 @@ require "rack/unpoly/inspector"
 class TestUnpolyInspector < Minitest::Test
   Inspector = Rack::Unpoly::Inspector
 
-  # def test_set_title
-  #   response = mock_response
-  #   inspector = Inspector.new(nil, response)
-  #   inspector.title = "New Title"
+  def test_set_title
+    response = Rack::MockResponse.new(200, [], [""])
+    inspector = Inspector.new(nil)
+    inspector.set_title(response, "New Title")
 
-  #   refute_nil response.headers["X-Up-Title"]
-  # end
+    refute_nil response.headers["X-Up-Title"]
+  end
 
   def test_validate_eh
     request = mock_request({ "HTTP_X_UP_VALIDATE" => "the-name" })
@@ -59,8 +59,4 @@ class TestUnpolyInspector < Minitest::Test
   def mock_request(opts = {})
     Rack::Request.new(Rack::MockRequest.env_for("/", opts))
   end
-
-  # def mock_response
-  #   Rack::MockResponse.new(200, [], [""])
-  # end
 end
