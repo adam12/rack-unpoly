@@ -9,6 +9,7 @@ module Sinatra # :nodoc:
   #
   # = Example
   #
+  #   require "sinatra/base"
   #   require "sinatra/unpoly"
   #
   #   class App < Sinatra::Base
