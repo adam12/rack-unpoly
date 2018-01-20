@@ -51,7 +51,15 @@ require "rack/unpoly/middleware"
 
 use Rack::Unpoly::Middleware
 
-run ->(env) { [200, {}, ["Hello World"]] }
+app = ->(env) {
+  if env["rack.unpoly"].up?
+    [200, {}, ["Unpoly request!"]]
+  else
+    [200, {}, ["Not Unpoly :("]]
+  end
+}
+
+run app
 ```
 
 ## Where are the Javascript and CSS assets?
