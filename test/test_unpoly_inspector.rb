@@ -6,7 +6,7 @@ class TestUnpolyInspector < Minitest::Test
   Inspector = Rack::Unpoly::Inspector
 
   def test_set_title
-    response = Rack::MockResponse.new(200, [], [""])
+    response = Rack::MockResponse.new(200, {}, [""])
     inspector = Inspector.new(nil)
     inspector.set_title(response, "New Title")
 
