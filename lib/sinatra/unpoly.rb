@@ -1,8 +1,9 @@
 # frozen-string-literal: true
+
 require "rack/unpoly/middleware"
 require "delegate"
 
-module Sinatra # :nodoc:
+module Sinatra
   # The Unpoly extension for Sinatra provides a little bit of sugar to make
   # Unpoly work seamlessly with Roda.
   #
@@ -26,34 +27,43 @@ module Sinatra # :nodoc:
   #
   module Unpoly
     class SinatraInspector < DelegateClass(Rack::Unpoly::Inspector)
-      attr_accessor :response # :nodoc:
-
-      def initialize(obj, response) # :nodoc:
+      # @api private
+      def initialize(obj, response)
         super(obj)
         @response = response
       end
 
       # Set the page title.
+      # @param value [String]
       def title=(value)
         set_title(response, value)
       end
+
+      private
+
+      # @api private
+      attr_reader :response
     end
 
     module Helpers
-      # The ::Rack::Unpoly inspector for this request.
+      # The inspector for this request.
+      # @see Rack::Unpoly::Inspector
+      # @return [Rack::Unpoly::Inspector]
       def unpoly
         SinatraInspector.new(env["rack.unpoly"], response)
       end
       alias up unpoly
 
       # Determine if this is an Unpoly request.
+      # @return [Boolean]
       def unpoly?
         unpoly.unpoly?
       end
       alias up? unpoly?
     end
 
-    def self.registered(app) # :nodoc:
+    # @api private
+    def self.registered(app)
       app.use Rack::Unpoly::Middleware
       app.helpers Unpoly::Helpers
     end
