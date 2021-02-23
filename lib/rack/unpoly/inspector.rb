@@ -14,7 +14,8 @@ module Rack
       # @api private
       def_delegators :request, :get_header
 
-      private attr_reader :request
+      attr_reader :request
+      private :request
 
       # @api private
       def initialize(request)
