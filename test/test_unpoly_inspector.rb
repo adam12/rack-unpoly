@@ -5,6 +5,22 @@ require "rack/unpoly/inspector"
 describe "Inspector" do
   Inspector = Rack::Unpoly::Inspector
 
+  describe "#up?" do
+    it "returns true when X-Up-Target header has value" do
+      request = mock_request({"HTTP_X_UP_TARGET" => "body"})
+      inspector = Inspector.new(request)
+
+      assert inspector.up?
+    end
+
+    it "returns false when X-Up-Target header is absent" do
+      request = mock_request
+      inspector = Inspector.new(request)
+
+      refute inspector.up?
+    end
+  end
+
   describe "#set_title" do
     it "sets X-Up-Title header" do
       response = Rack::MockResponse.new(200, {}, [""])
