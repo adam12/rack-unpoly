@@ -21,6 +21,22 @@ describe "Inspector" do
     end
   end
 
+  describe "#version?" do
+    it "returns nil if X-Up-Version header is absent" do
+      request = mock_request
+      inspector = Inspector.new(request)
+
+      assert_nil inspector.version
+    end
+
+    it "returns X-Up-Version header value if present" do
+      request = mock_request({"HTTP_X_UP_VERSION" => "version"})
+      inspector = Inspector.new(request)
+
+      assert_equal "version", inspector.version
+    end
+  end
+
   describe "#set_title" do
     it "sets X-Up-Title header" do
       response = Rack::MockResponse.new(200, {}, [""])

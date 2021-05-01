@@ -29,6 +29,11 @@ module Rack
       end
       alias up? unpoly?
 
+      # @return [String, nil]
+      def version
+        get_header("HTTP_X_UP_VERSION")
+      end
+
       # Identify if the +tested_target+ will match the actual target requested.
       #
       # @param tested_target [String]
