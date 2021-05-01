@@ -42,6 +42,13 @@ module Rack
         query_target(target, tested_target)
       end
 
+      # @param response [Rack::Response]
+      # @param new_target [String]
+      # @since X.X.X
+      def set_target(response, new_target)
+        response.headers["X-Up-Target"] = new_target
+      end
+
       # The actual target as requested by Unpoly.
       #
       # @return [String, nil]

@@ -98,6 +98,16 @@ describe "Inspector" do
     end
   end
 
+  describe "#set_target" do
+    it "sets X-Up-Target header to provided value" do
+      response = Rack::MockResponse.new(200, {}, [""])
+      inspector = Inspector.new(nil)
+      inspector.set_target(response, ".server")
+
+      assert_equal ".server", response.headers["X-Up-Target"]
+    end
+  end
+
   def mock_request(opts = {})
     Rack::Request.new(Rack::MockRequest.env_for("/", opts))
   end
