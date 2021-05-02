@@ -117,6 +117,37 @@ describe "Inspector" do
     end
   end
 
+  describe "#render_nothing" do
+    before do
+      @response = Rack::Response.new
+      @inspector = Inspector.new(nil)
+    end
+
+    it "renders an empty response" do
+      @inspector.render_nothing(@response)
+
+      assert_empty @response.body
+    end
+
+    it "sets an X-Up-Target: :none header to prevent matching errors on the client" do
+      @inspector.render_nothing(@response)
+
+      assert_equal ":none", @response.get_header("HTTP_X_UP_TARGET")
+    end
+
+    it "responds with a 200 OK status" do
+      @inspector.render_nothing(@response)
+
+      assert_equal 200, @response.status
+    end
+
+    it "allows to pass a different status code with :status option" do
+      @inspector.render_nothing(@response, status: 204)
+
+      assert_equal 204, @response.status
+    end
+  end
+
   # Tests for string fields
   module StringField
     extend Minitest::Spec::DSL

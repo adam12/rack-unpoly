@@ -109,6 +109,14 @@ module Rack
         response.headers["X-Up-Title"] = new_title
       end
 
+      # @param response [Rack::Response]
+      # @param status [Integer]
+      def render_nothing(response, status: 200)
+        response.headers["HTTP_X_UP_TARGET"] = ":none"
+        response.status = status
+        response.body = ""
+      end
+
       # Determine if this is a validate request.
       #
       # @return [Boolean]
