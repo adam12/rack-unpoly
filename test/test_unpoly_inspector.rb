@@ -126,12 +126,46 @@ describe "Inspector" do
     end
   end
 
+  module HashField
+    extend Minitest::Spec::DSL
+
+    it "returns value of the request header, parsed as JSON" do
+      request = mock_request({header => '{ "foo": "bar" }'})
+      inspector = Inspector.new(request)
+
+      result = reader.call(inspector)
+
+      assert_respond_to result, :[]
+      assert_equal "bar", result["foo"]
+    end
+
+    it "allows to access the hash with symbol keys instead of string keys" do
+      skip
+    end
+
+    it "returns an empty hash if no request header is set" do
+      request = mock_request
+      inspector = Inspector.new(request)
+
+      result = reader.call(inspector)
+
+      assert_respond_to result, :[]
+      assert_empty result
+    end
+  end
+
   describe "#mode" do
     let(:header) { "HTTP_X_UP_MODE" }
     let(:reader) { ->(inspector) { inspector.mode } }
 
     include StringField
   end
+
+  describe "#context" do
+    let(:header) { "HTTP_X_UP_CONTEXT" }
+    let(:reader) { ->(inspector) { inspector.context }}
+
+    include HashField
   end
 
   def mock_request(opts = {})

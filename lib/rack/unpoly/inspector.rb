@@ -1,6 +1,7 @@
 # frozen-string-literal: true
 
 require "forwardable"
+require "json"
 
 module Rack
   module Unpoly
@@ -39,6 +40,19 @@ module Rack
       # @since X.X.X
       def mode
         get_header("HTTP_X_UP_MODE")
+      end
+
+      # @return [Hash]
+      #
+      # @since X.X.X
+      def context
+        value = get_header("HTTP_X_UP_CONTEXT")
+
+        if value
+          JSON.parse(value)
+        else
+          {}
+        end
       end
 
       # Identify if the +tested_target+ will match the actual target requested.
