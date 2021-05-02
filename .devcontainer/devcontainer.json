@@ -1,16 +1,9 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.161.0/containers/ruby
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.163.1/containers/ruby
 {
 	"name": "Ruby",
 	"build": {
-		"dockerfile": "Dockerfile",
-		"args": { 
-			// Update 'VARIANT' to pick a Ruby version: 3, 3.0, 2, 2.7, 2.6, 2.5
-			"VARIANT": "3",
-			// Options
-			"INSTALL_NODE": "false",
-			"NODE_VERSION": "lts/*"
-		}
+		"dockerfile": "Dockerfile"
 	},
 
 	// Set *default* container specific settings.json values on container create.
@@ -24,12 +17,12 @@
 	],
 	
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [8808],
+	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "ruby --version",
+	"postCreateCommand": "ruby --version && bundle install -j $(nproc)",
 
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "vscode"
+	"remoteUser": "app"
 
 }

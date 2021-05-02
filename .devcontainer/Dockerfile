@@ -1,20 +1,16 @@
-# See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.161.0/containers/ruby/.devcontainer/base.Dockerfile
+FROM ruby:3
 
-# [Choice] Ruby version: 3, 3.0, 2, 2.7, 2.6, 2.5
-ARG VARIANT="3"
-FROM mcr.microsoft.com/vscode/devcontainers/ruby:0-${VARIANT}
+RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get -yq dist-upgrade && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
+    sudo \
+    vim && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    truncate -s 0 /var/log/*log
 
-# [Option] Install Node.js
-ARG INSTALL_NODE="true"
-ARG NODE_VERSION="lts/*"
-RUN if [ "${INSTALL_NODE}" = "true" ]; then su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${NODE_VERSION} 2>&1"; fi
+RUN echo 'app ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/app && \
+  chmod 440 /etc/sudoers.d/app
 
-# [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
-
-# [Optional] Uncomment this line to install additional gems.
-# RUN gem install <your-gem-names-here>
-
-# [Optional] Uncomment this line to install global node packages.
-# RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1
+RUN useradd -ms /bin/bash app
+USER app
+WORKDIR /usr/src/app
