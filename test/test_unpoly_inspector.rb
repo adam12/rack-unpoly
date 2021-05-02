@@ -5,6 +5,8 @@ require "rack/unpoly/inspector"
 describe "Inspector" do
   Inspector = Rack::Unpoly::Inspector
 
+  let(:response) { Rack::Response.new }
+
   describe "#up?" do
     it "returns true when X-Up-Target header has value" do
       request = mock_request({"HTTP_X_UP_TARGET" => "body"})
@@ -39,7 +41,6 @@ describe "Inspector" do
 
   describe "#set_title" do
     it "sets X-Up-Title header" do
-      response = Rack::MockResponse.new(200, {}, [""])
       inspector = Inspector.new(nil)
       inspector.set_title(response, "New Title")
 
@@ -100,7 +101,6 @@ describe "Inspector" do
 
   describe "#set_target" do
     it "sets X-Up-Target header to provided value" do
-      response = Rack::Response.new
       inspector = Inspector.new(mock_request)
       inspector.set_target(response, ".server")
 
@@ -109,7 +109,6 @@ describe "Inspector" do
 
     it "sends no X-Up-Target header if the target wasn't changed (the client might have something more generic like :main)" do
       request = mock_request({ "HTTP_X_UP_TARGET" => ".server" })
-      response = Rack::Response.new
       inspector = Inspector.new(request)
       inspector.set_target(response, ".server")
 
@@ -118,7 +117,6 @@ describe "Inspector" do
 
     it "sends no X-Up-Target header if the target was set to the existing value from the request" do
       request = mock_request({"HTTP_X_UP_TARGET" => ".server"})
-      response = Rack::Response.new
       inspector = Inspector.new(request)
       inspector.set_target(response, ".server")
 
@@ -127,7 +125,6 @@ describe "Inspector" do
 
     it "returns the given target in subsequent calls to up.target" do
       request = mock_request({"HTTP_X_UP_TARGET" => ".client"})
-      response = Rack::Response.new
       inspector = Inspector.new(request)
       inspector.set_target(response, ".server")
 
@@ -136,7 +133,6 @@ describe "Inspector" do
 
     it "returns the given target in subsequent calls to up.fail_target" do
       request = mock_request({"HTTP_X_UP_TARGET" => ".client"})
-      response = Rack::Response.new
       inspector = Inspector.new(request)
       inspector.set_target(response, ".server")
 
@@ -156,32 +152,31 @@ describe "Inspector" do
 
   describe "#render_nothing" do
     before do
-      @response = Rack::Response.new
       @inspector = Inspector.new(nil)
     end
 
     it "renders an empty response" do
-      @inspector.render_nothing(@response)
+      @inspector.render_nothing(response)
 
-      assert_empty @response.body
+      assert_empty response.body
     end
 
     it "sets an X-Up-Target: :none header to prevent matching errors on the client" do
-      @inspector.render_nothing(@response)
+      @inspector.render_nothing(response)
 
-      assert_equal ":none", @response.get_header("HTTP_X_UP_TARGET")
+      assert_equal ":none", response.get_header("HTTP_X_UP_TARGET")
     end
 
     it "responds with a 200 OK status" do
-      @inspector.render_nothing(@response)
+      @inspector.render_nothing(response)
 
-      assert_equal 200, @response.status
+      assert_equal 200, response.status
     end
 
     it "allows to pass a different status code with :status option" do
-      @inspector.render_nothing(@response, status: 204)
+      @inspector.render_nothing(response, status: 204)
 
-      assert_equal 204, @response.status
+      assert_equal 204, response.status
     end
   end
 
