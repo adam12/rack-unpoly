@@ -107,6 +107,16 @@ describe "Inspector" do
       assert_equal ".server", response.headers["X-Up-Target"]
     end
 
+  describe "#set_fail_target" do
+    it "is not defined, as the target provided through up.target=() is used for all render cases" do
+      inspector = Inspector.new(nil)
+
+      assert_raises NoMethodError do
+        inspector.set_fail_target
+      end
+    end
+  end
+
   # Tests for string fields
   module StringField
     extend Minitest::Spec::DSL
