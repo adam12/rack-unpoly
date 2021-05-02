@@ -3,7 +3,7 @@ require "rack"
 require "rack/test"
 require "rack/unpoly/middleware"
 
-class TestUnpolyMiddleware < Minitest::Test
+describe "Middleware" do
   include Rack::Test::Methods
 
   def app
@@ -16,25 +16,25 @@ class TestUnpolyMiddleware < Minitest::Test
     end
   end
 
-  def test_sets_up_method
+  it "sets X-Up-Method header" do
     get "/"
 
     refute_nil last_response.headers["X-Up-Method"]
   end
 
-  def test_sets_up_location
+  it "sets X-Up-Location header" do
     get "/"
 
     refute_nil last_response.headers["X-Up-Location"]
   end
 
-  def test_unpoly_sets_cookie_on_non_get_requests
+  it "sets _up_method cookie on non-GET requests" do
     post "/"
 
     assert_equal "_up_method=POST; path=/", last_response.headers["Set-Cookie"]
   end
 
-  def test_unpoly_deletes_cookie_on_get_requests
+  it "deletes _up_method cookie on GET requests" do
     get "/"
 
     assert_match %r{_up_method=;}, last_response.headers["Set-Cookie"]

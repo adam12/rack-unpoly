@@ -3,7 +3,7 @@ require "rack/test"
 require "sinatra/base"
 require "sinatra/unpoly"
 
-class TestUnpolySinatra < Minitest::Test
+describe "Sinatra Plugin" do
   include Rack::Test::Methods
 
   def app
@@ -16,7 +16,7 @@ class TestUnpolySinatra < Minitest::Test
     end
   end
 
-  def test_uses_middleware
+  it "uses middleware" do
     get "/"
 
     refute_nil last_response.headers["X-Up-Method"]
