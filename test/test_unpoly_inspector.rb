@@ -100,12 +100,49 @@ describe "Inspector" do
 
   describe "#set_target" do
     it "sets X-Up-Target header to provided value" do
-      response = Rack::MockResponse.new(200, {}, [""])
-      inspector = Inspector.new(nil)
+      response = Rack::Response.new
+      inspector = Inspector.new(mock_request)
       inspector.set_target(response, ".server")
 
       assert_equal ".server", response.headers["X-Up-Target"]
     end
+
+    it "sends no X-Up-Target header if the target wasn't changed (the client might have something more generic like :main)" do
+      request = mock_request({ "HTTP_X_UP_TARGET" => ".server" })
+      response = Rack::Response.new
+      inspector = Inspector.new(request)
+      inspector.set_target(response, ".server")
+
+      assert_nil response.headers["X-Up-Target"]
+    end
+
+    it "sends no X-Up-Target header if the target was set to the existing value from the request" do
+      request = mock_request({"HTTP_X_UP_TARGET" => ".server"})
+      response = Rack::Response.new
+      inspector = Inspector.new(request)
+      inspector.set_target(response, ".server")
+
+      assert_nil response.headers["X-Up-Target"]
+    end
+
+    it "returns the given target in subsequent calls to up.target" do
+      request = mock_request({"HTTP_X_UP_TARGET" => ".client"})
+      response = Rack::Response.new
+      inspector = Inspector.new(request)
+      inspector.set_target(response, ".server")
+
+      assert_equal ".server", inspector.target
+    end
+
+    it "returns the given target in subsequent calls to up.fail_target" do
+      request = mock_request({"HTTP_X_UP_TARGET" => ".client"})
+      response = Rack::Response.new
+      inspector = Inspector.new(request)
+      inspector.set_target(response, ".server")
+
+      assert_equal ".server", inspector.fail_target
+    end
+  end
 
   describe "#set_fail_target" do
     it "is not defined, as the target provided through up.target=() is used for all render cases" do

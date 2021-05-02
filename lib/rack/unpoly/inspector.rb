@@ -67,14 +67,15 @@ module Rack
       # @param new_target [String]
       # @since X.X.X
       def set_target(response, new_target)
-        response.headers["X-Up-Target"] = new_target
+        return if target == new_target
+        response.headers["X-Up-Target"] = @target = new_target
       end
 
       # The actual target as requested by Unpoly.
       #
       # @return [String, nil]
       def target
-        get_header("HTTP_X_UP_TARGET")
+        @target || get_header("HTTP_X_UP_TARGET")
       end
 
       # The CSS selector for the fragment Unpoly will update if the request fails.
@@ -82,7 +83,7 @@ module Rack
       #
       # @return [String, nil]
       def fail_target
-        get_header("HTTP_X_UP_FAIL_TARGET")
+        @target || get_header("HTTP_X_UP_FAIL_TARGET")
       end
 
       # Determine if the +tested_target+ is the current target for a failed request.
