@@ -34,6 +34,13 @@ module Rack
         get_header("HTTP_X_UP_VERSION")
       end
 
+      # @return [String, nil]
+      #
+      # @since X.X.X
+      def mode
+        get_header("HTTP_X_UP_MODE")
+      end
+
       # Identify if the +tested_target+ will match the actual target requested.
       #
       # @param tested_target [String]

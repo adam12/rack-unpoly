@@ -106,6 +106,32 @@ describe "Inspector" do
 
       assert_equal ".server", response.headers["X-Up-Target"]
     end
+
+  # Tests for string fields
+  module StringField
+    extend Minitest::Spec::DSL
+
+    it "returns value if header set" do
+      request = mock_request({header => "header value"})
+      inspector = Inspector.new(request)
+
+      assert_equal "header value", reader.call(inspector)
+    end
+
+    it "returns nil if header is missing" do
+      request = mock_request
+      inspector = Inspector.new(request)
+
+      assert_nil reader.call(inspector)
+    end
+  end
+
+  describe "#mode" do
+    let(:header) { "HTTP_X_UP_MODE" }
+    let(:reader) { ->(inspector) { inspector.mode } }
+
+    include StringField
+  end
   end
 
   def mock_request(opts = {})
