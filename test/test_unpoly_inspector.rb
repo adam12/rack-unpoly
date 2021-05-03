@@ -97,11 +97,18 @@ describe "Inspector" do
   end
 
   describe "#validate?" do
-    it "returns true if X-Up-Validate header is present" do
-      request = mock_request({ "HTTP_X_UP_VALIDATE" => "the-name" })
+    it "returns true the request is an Unpoly validation call" do
+      request = mock_request({ "HTTP_X_UP_VALIDATE" => "user[email]" })
       inspector = Inspector.new(request)
 
       assert inspector.validate?
+    end
+
+    it "returns false if the request is not an Unpoly validation call" do
+      request = mock_request
+      inspector = Inspector.new(request)
+
+      refute inspector.validate?
     end
   end
 
