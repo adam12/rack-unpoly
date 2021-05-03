@@ -3,6 +3,54 @@ require "rack"
 require "rack/unpoly/inspector"
 
 describe "Inspector" do
+  # Tests for string fields
+  module StringField
+    extend Minitest::Spec::DSL
+
+    it "returns value if header set" do
+      request = mock_request({header => "header value"})
+      inspector = Inspector.new(request)
+
+      assert_equal "header value", reader.call(inspector)
+    end
+
+    it "returns nil if header is missing" do
+      request = mock_request
+      inspector = Inspector.new(request)
+
+      assert_nil reader.call(inspector)
+    end
+  end
+
+  # Tests for Hash-like fields
+  module HashField
+    extend Minitest::Spec::DSL
+
+    it "returns value of the request header, parsed as JSON" do
+      request = mock_request({header => '{ "foo": "bar" }'})
+      inspector = Inspector.new(request)
+
+      result = reader.call(inspector)
+
+      assert_respond_to result, :[]
+      assert_equal "bar", result["foo"]
+    end
+
+    it "allows to access the hash with symbol keys instead of string keys" do
+      skip
+    end
+
+    it "returns an empty hash if no request header is set" do
+      request = mock_request
+      inspector = Inspector.new(request)
+
+      result = reader.call(inspector)
+
+      assert_respond_to result, :[]
+      assert_empty result
+    end
+  end
+
   Inspector = Rack::Unpoly::Inspector
 
   let(:response) { Rack::Response.new }
@@ -177,53 +225,6 @@ describe "Inspector" do
       @inspector.render_nothing(response, status: 204)
 
       assert_equal 204, response.status
-    end
-  end
-
-  # Tests for string fields
-  module StringField
-    extend Minitest::Spec::DSL
-
-    it "returns value if header set" do
-      request = mock_request({header => "header value"})
-      inspector = Inspector.new(request)
-
-      assert_equal "header value", reader.call(inspector)
-    end
-
-    it "returns nil if header is missing" do
-      request = mock_request
-      inspector = Inspector.new(request)
-
-      assert_nil reader.call(inspector)
-    end
-  end
-
-  module HashField
-    extend Minitest::Spec::DSL
-
-    it "returns value of the request header, parsed as JSON" do
-      request = mock_request({header => '{ "foo": "bar" }'})
-      inspector = Inspector.new(request)
-
-      result = reader.call(inspector)
-
-      assert_respond_to result, :[]
-      assert_equal "bar", result["foo"]
-    end
-
-    it "allows to access the hash with symbol keys instead of string keys" do
-      skip
-    end
-
-    it "returns an empty hash if no request header is set" do
-      request = mock_request
-      inspector = Inspector.new(request)
-
-      result = reader.call(inspector)
-
-      assert_respond_to result, :[]
-      assert_empty result
     end
   end
 
