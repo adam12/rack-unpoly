@@ -209,11 +209,32 @@ describe "Inspector" do
   end
 
   describe "#fail_target?" do
-    it "returns true if value matches X-Up-Fail-Target value" do
-      request = mock_request({ "HTTP_X_UP_FAIL_TARGET" => "foo" })
+    it "returns false if the tested CSS selector only matches the X-Up-Target header" do
+      request = mock_request({"HTTP_X_UP_TARGET" => ".foo", "HTTP_X_UP_FAIL_TARGET" => ".bar"})
       inspector = Inspector.new(request)
 
-      assert inspector.fail_target?("foo")
+      refute inspector.fail_target?(".foo")
+    end
+
+    it "returns true if the tested CSS selector matches the X-Up-Fail-Target header" do
+      request = mock_request({"HTTP_X_UP_TARGET" => ".foo", "HTTP_X_UP_FAIL_TARGET" => ".bar"})
+      inspector = Inspector.new(request)
+
+      assert inspector.fail_target?(".bar")
+    end
+
+    it "returns true if the request is not an Unpoly request" do
+      request = mock_request
+      inspector = Inspector.new(request)
+
+      assert inspector.fail_target?(".foo")
+    end
+
+    it "returns true if the request is an Unpoly request, but does not reveal a target for better cacheability" do
+      request = mock_request({"HTTP_X_UP_VERSION" => "1.0.0"})
+      inspector = Inspector.new(request)
+
+      assert inspector.fail_target?(".foo")
     end
   end
 
