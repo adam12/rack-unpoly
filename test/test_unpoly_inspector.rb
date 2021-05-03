@@ -239,12 +239,30 @@ describe "Inspector" do
   end
 
   describe "#any_target?" do
-    it "returns true if value matches X-Up-Target value" do
-      request = mock_request({ "HTTP_X_UP_TARGET" => "foo" })
+    let :headers do
+      { "HTTP_X_UP_TARGET" => ".success",
+        "HTTP_X_UP_FAIL_TARGET" => ".failure" }
+    end
+
+    it "returns true if the tested CSS selector is the target for a successful response" do
+      request = mock_request(headers)
       inspector = Inspector.new(request)
 
-      assert inspector.any_target?("foo")
-      refute inspector.any_target?("baz")
+      assert inspector.any_target?(".success")
+    end
+
+    it "returns true if the tested CSS selector is the target for a failed response" do
+      request = mock_request(headers)
+      inspector = Inspector.new(request)
+
+      assert inspector.any_target?(".failure")
+    end
+
+    it "returns false if the tested CSS selector is a target for neither successful nor failed response" do
+      request = mock_request(headers)
+      inspector = Inspector.new(request)
+
+      refute inspector.any_target?(".other")
     end
   end
 
