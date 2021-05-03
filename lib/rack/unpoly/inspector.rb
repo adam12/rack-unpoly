@@ -140,6 +140,8 @@ module Rack
         if up?
           if actual_target == tested_target
             true
+          elsif actual_target.to_s.split(/,\s?/).include?(tested_target)
+            true
           elsif actual_target == "html"
             true
           elsif actual_target == "body"

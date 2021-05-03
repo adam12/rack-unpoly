@@ -106,25 +106,105 @@ describe "Inspector" do
   end
 
   describe "#target?" do
-    it "always returns true if X-Up-Target value is 'html'" do
-      request = mock_request({ "HTTP_X_UP_TARGET" => "html" })
+    it "returns true if the tested CSS selector is requested via Unpoly" do
+      inspector = Inspector.new(mock_request({"HTTP_X_UP_TARGET" => ".foo"}))
+
+      assert inspector.target?(".foo")
+    end
+
+    it "returns false if Unpoly is requesting another CSS selector" do
+      inspector = Inspector.new(mock_request({"HTTP_X_UP_TARGET" => ".bar"}))
+
+      refute inspector.target?(".foo")
+    end
+
+    it "returns true if the request is not an Unpoly request" do
+      inspector = Inspector.new(mock_request)
+
+      assert inspector.target?(".foo")
+    end
+
+    it "returns true if the request is an Unpoly request, but does not reveal a target for better cacheability" do
+      inspector = Inspector.new(mock_request({"HTTP_X_UP_VERSION" => "1.0.0"}))
+
+      assert inspector.target?(".foo")
+    end
+
+    it "returns true if testing a custom selector, and Unpoly requests 'body'" do
+      request = mock_request({"HTTP_X_UP_TARGET" => "body"})
+      inspector = Inspector.new(request)
+
+      assert inspector.target?(".foo")
+    end
+
+    it "returns true if testing a custom selector, and Unpoly requests 'html'" do
+      request = mock_request({"HTTP_X_UP_TARGET" => "html"})
       inspector = Inspector.new(request)
 
       assert inspector.target?("foo")
     end
 
-    it "mostly returns true if X-Up-Target value is 'body'" do
-      request = mock_request({ "HTTP_X_UP_TARGET" => "body" })
+    it "returns true if testing 'body', and Unpoly requests 'html'" do
+      request = mock_request({"HTTP_X_UP_TARGET" => "html"})
       inspector = Inspector.new(request)
 
-      assert inspector.target?("div")
+      assert inspector.target?("body")
+    end
+
+    it "returns true if testing 'head', and Unpoly requests 'html'" do
+      request = mock_request({"HTTP_X_UP_TARGET" => "html"})
+      inspector = Inspector.new(request)
+
+      assert inspector.target?("head")
+    end
+
+    it "returns false if the tested CSS selector is 'head' but Unpoly requests 'body'" do
+      request = mock_request({"HTTP_X_UP_TARGET" => "body"})
+      inspector = Inspector.new(request)
+
       refute inspector.target?("head")
     end
 
-    it "returns true if not Unpoly request" do
-      inspector = Inspector.new(mock_request)
+    it "returns false if the tested CSS selector is 'title' but Unpoly requests 'body'" do
+      request = mock_request({"HTTP_X_UP_TARGET" => "body"})
+      inspector = Inspector.new(request)
 
-      assert inspector.target?("dontmatter")
+      refute inspector.target?("title")
+    end
+
+    it "returns false if the tested CSS selector is 'meta' but Unpoly requests 'body'" do
+      request = mock_request({"HTTP_X_UP_TARGET" => "body"})
+      inspector = Inspector.new(request)
+
+      refute inspector.target?("meta")
+    end
+
+    it "returns true if the tested CSS selector is 'head', and Unpoly requests 'html'" do
+      request = mock_request({"HTTP_X_UP_TARGET" => "html"})
+      inspector = Inspector.new(request)
+
+      assert inspector.target?("head")
+    end
+
+    it "returns true if the tested CSS selector is 'title', Unpoly requests 'html'" do
+      request = mock_request({"HTTP_X_UP_TARGET" => "html"})
+      inspector = Inspector.new(request)
+
+      assert inspector.target?("title")
+    end
+
+    it "returns true if the tested CSS selector is 'meta', and Unpoly requests 'html'" do
+      request = mock_request({"HTTP_X_UP_TARGET" => "html"})
+      inspector = Inspector.new(request)
+
+      assert inspector.target?("meta")
+    end
+
+    it "returns true if the tested CSS selector is included in a comma-separated group of requested selectors" do
+      request = mock_request({"HTTP_X_UP_TARGET" => ".foo, .bar, .baz"})
+      inspector = Inspector.new(request)
+
+      assert inspector.target?(".bar")
     end
   end
 
