@@ -368,6 +368,18 @@ describe "Inspector" do
     include HashField
   end
 
+  describe "#clear_cache" do
+    before do
+      @inspector = Inspector.new(nil)
+    end
+
+    it "sets an X-Up-Cache headers" do
+      @inspector.clear_cache(response)
+
+      assert_equal "*", response.get_header("HTTP_X_UP_CACHE")
+    end
+  end
+
   def mock_request(opts = {})
     Rack::Request.new(Rack::MockRequest.env_for("/", opts))
   end

@@ -118,6 +118,12 @@ module Rack
         response.body = ""
       end
 
+      # @param response [Rack::Response]
+      # @param pattern [String]
+      def clear_cache(response, pattern = "*")
+        response.headers["HTTP_X_UP_CACHE"] = pattern
+      end
+
       # Determine if this is a validate request.
       #
       # @return [Boolean]
