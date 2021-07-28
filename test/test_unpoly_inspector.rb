@@ -4,7 +4,7 @@ require "rack/unpoly/inspector"
 
 describe "Inspector" do
   # Tests for string fields
-  module StringField
+  module StringFieldBehaviour
     extend Minitest::Spec::DSL
 
     it "returns value if header set" do
@@ -23,7 +23,7 @@ describe "Inspector" do
   end
 
   # Tests for Hash-like fields
-  module HashField
+  module HashFieldBehaviour
     extend Minitest::Spec::DSL
 
     it "returns value of the request header, parsed as JSON" do
@@ -358,14 +358,14 @@ describe "Inspector" do
     let(:header) { "HTTP_X_UP_MODE" }
     let(:reader) { ->(inspector) { inspector.mode } }
 
-    include StringField
+    include StringFieldBehaviour
   end
 
   describe "#context" do
     let(:header) { "HTTP_X_UP_CONTEXT" }
     let(:reader) { ->(inspector) { inspector.context }}
 
-    include HashField
+    include HashFieldBehaviour
   end
 
   describe "#clear_cache" do
