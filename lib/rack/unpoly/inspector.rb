@@ -120,6 +120,8 @@ module Rack
 
       # @param response [Rack::Response]
       # @param pattern [String]
+      #
+      # @since X.X.X
       def clear_cache(response, pattern = "*")
         response.headers["HTTP_X_UP_CACHE"] = pattern
       end
