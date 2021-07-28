@@ -42,6 +42,13 @@ module Rack
         get_header("HTTP_X_UP_MODE")
       end
 
+      # @return [String, nil]
+      #
+      # @since X.X.X
+      def fail_mode
+        get_header("HTTP_X_UP_FAIL_MODE")
+      end
+
       # @return [Hash]
       #
       # @since X.X.X

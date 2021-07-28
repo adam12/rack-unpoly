@@ -361,6 +361,13 @@ describe "Inspector" do
     include StringFieldBehaviour
   end
 
+  describe "#fail_mode" do
+    let(:header) { "HTTP_X_UP_FAIL_MODE" }
+    let(:reader) { ->(inspector) { inspector.fail_mode } }
+
+    include StringFieldBehaviour
+  end
+
   describe "#context" do
     let(:header) { "HTTP_X_UP_CONTEXT" }
     let(:reader) { ->(inspector) { inspector.context }}
