@@ -32,10 +32,11 @@ module Rack
       # @api private
       def call(env)
         request = Rack::Request.new(env)
-        env["rack.unpoly"] = Inspector.new(request)
+        env["rack.unpoly"] = inspector = Inspector.new(request)
 
         status, headers, response = @app.call(env)
         setup_protocol(request, headers)
+        send_events(headers, inspector.events)
 
         [status, headers, response]
       end
@@ -55,6 +56,13 @@ module Rack
         else
           Rack::Utils.delete_cookie_header!(headers, "_up_method", { path: "/" })
         end
+      end
+
+      # @since X.X.X
+      def send_events(headers, events)
+        return if events.empty?
+
+        headers["X-Up-Events"] = events.to_json
       end
     end
   end

@@ -21,6 +21,7 @@ module Rack
       # @api private
       def initialize(request)
         @request = request
+        @events = []
       end
 
       # Determine if this is an Unpoly request.
@@ -132,6 +133,19 @@ module Rack
       def clear_cache(response, pattern = "*")
         response.headers["HTTP_X_UP_CACHE"] = pattern
       end
+
+      # @param type [String]
+      # @return [void]
+      #
+      # @since X.X.X
+      def emit(_type = nil, type: _type, **data)
+        raise ArgumentError, "missing type" unless type
+
+        events.push({type: type, **data})
+      end
+
+      # @since X.X.X
+      attr_accessor :events
 
       # Determine if this is a validate request.
       #

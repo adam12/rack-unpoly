@@ -387,6 +387,30 @@ describe "Inspector" do
     end
   end
 
+  describe "#emit" do
+    before do
+      @inspector = Inspector.new(nil)
+    end
+
+    it "pushes to events Array" do
+      @inspector.emit("foobar")
+
+      assert_equal [{type: "foobar"}], @inspector.events
+    end
+
+    it "accepts Hash event type" do
+      @inspector.emit(type: "foobar")
+
+      assert_equal [{type: "foobar"}], @inspector.events
+    end
+
+    it "accepts extra data as second argument" do
+      @inspector.emit("foobar", layer: "baz")
+
+      assert_equal [{type: "foobar", layer: "baz"}], @inspector.events
+    end
+  end
+
   def mock_request(opts = {})
     Rack::Request.new(Rack::MockRequest.env_for("/", opts))
   end

@@ -39,4 +39,19 @@ describe "Middleware" do
 
     assert_match %r{_up_method=;}, last_response.headers["Set-Cookie"]
   end
+
+  it "sets X-Up-Events header" do
+    @app = Rack::Builder.app do
+      use Rack::Unpoly::Middleware
+
+      run ->(env) do
+        env["rack.unpoly"].emit("foobar")
+        [200, {}, ["Hello World"]]
+      end
+    end
+
+    get "/"
+
+    assert_equal [{type: "foobar"}].to_json, last_response.headers["X-Up-Events"]
+  end
 end
