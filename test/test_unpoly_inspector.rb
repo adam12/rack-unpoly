@@ -383,7 +383,7 @@ describe "Inspector" do
     it "sets an X-Up-Cache headers" do
       @inspector.clear_cache(response)
 
-      assert_equal "*", response.get_header("HTTP_X_UP_CACHE")
+      assert_equal "*", response.get_header("X-Up-Cache")
     end
   end
 

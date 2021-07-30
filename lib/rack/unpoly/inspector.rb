@@ -128,10 +128,12 @@ module Rack
 
       # @param response [Rack::Response]
       # @param pattern [String]
+      # @return [void]
       #
       # @since X.X.X
       def clear_cache(response, pattern = "*")
-        response.headers["HTTP_X_UP_CACHE"] = pattern
+        response.headers["X-Up-Cache"] = pattern
+        nil
       end
 
       # @param type [String]
