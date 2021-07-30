@@ -338,7 +338,7 @@ describe "Inspector" do
     it "sets an X-Up-Target: :none header to prevent matching errors on the client" do
       @inspector.render_nothing(response)
 
-      assert_equal ":none", response.get_header("HTTP_X_UP_TARGET")
+      assert_equal ":none", response.get_header("X-Up-Target")
     end
 
     it "responds with a 200 OK status" do

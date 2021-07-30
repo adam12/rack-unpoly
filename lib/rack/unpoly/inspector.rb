@@ -121,7 +121,7 @@ module Rack
       # @param response [Rack::Response]
       # @param status [Integer]
       def render_nothing(response, status: 200)
-        response.headers["HTTP_X_UP_TARGET"] = ":none"
+        response.headers["X-Up-Target"] = ":none"
         response.status = status
         response.body = ""
       end
