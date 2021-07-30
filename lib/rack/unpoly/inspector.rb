@@ -2,6 +2,7 @@
 
 require "forwardable"
 require "json"
+require_relative "context"
 
 module Rack
   module Unpoly
@@ -54,12 +55,21 @@ module Rack
       #
       # @since X.X.X
       def context
-        value = get_header("HTTP_X_UP_CONTEXT")
+        @context ||= begin
+          value = get_header("HTTP_X_UP_CONTEXT")
 
-        if value
-          JSON.parse(value)
-        else
-          {}
+          Context.new(value ? JSON.parse(value) : {})
+        end
+      end
+
+      # @return [Hash]
+      #
+      # @since X.X.X
+      def fail_context
+        @fail_context ||= begin
+          value = get_header("HTTP_X_UP_FAIL_CONTEXT")
+
+          Context.new(value ? JSON.parse(value) : {})
         end
       end
 

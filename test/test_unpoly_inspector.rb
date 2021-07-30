@@ -37,7 +37,13 @@ describe "Inspector" do
     end
 
     it "allows to access the hash with symbol keys instead of string keys" do
-      skip
+      request = mock_request({header => '{ "foo": "bar" }'})
+      inspector = Inspector.new(request)
+
+      result = reader.call(inspector)
+
+      assert_respond_to result, :[]
+      assert_equal "bar", result[:foo]
     end
 
     it "returns an empty hash if no request header is set" do
@@ -354,6 +360,26 @@ describe "Inspector" do
     end
   end
 
+  describe "#context[]=" do
+    before do
+      request = mock_request
+      @inspector = Inspector.new(request)
+    end
+
+    it "changes the value for subsequent calls of up.context[]" do
+      @inspector.context[:bar] = "barValue"
+
+      assert_equal "barValue", @inspector.context[:bar]
+    end
+
+    it "changes the value for subsequent calls of up.fail_context[], since context updates will be applied to whatever layer ends up being updated" do
+      skip
+      @inspector.context[:bar] = "barValue"
+
+      assert_equal "barValue", @inspector.fail_context[:bar]
+    end
+  end
+
   describe "#mode" do
     let(:header) { "HTTP_X_UP_MODE" }
     let(:reader) { ->(inspector) { inspector.mode } }
@@ -371,6 +397,13 @@ describe "Inspector" do
   describe "#context" do
     let(:header) { "HTTP_X_UP_CONTEXT" }
     let(:reader) { ->(inspector) { inspector.context }}
+
+    include HashFieldBehaviour
+  end
+
+  describe "#fail_context" do
+    let(:header) { "HTTP_X_UP_FAIL_CONTEXT" }
+    let(:reader) { ->(inspector) { inspector.fail_context }}
 
     include HashFieldBehaviour
   end
