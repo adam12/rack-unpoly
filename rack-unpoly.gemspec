@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Adam Daniels"]
   spec.email = "adam@mediadrive.ca"
 
-  spec.summary = %q(Integrate Unpoly with any Rack or Sinatra application)
+  spec.summary = "Integrate Unpoly with any Rack or Sinatra application"
   spec.homepage = "https://github.com/adam12/rack-unpoly"
   spec.license = "MIT"
 

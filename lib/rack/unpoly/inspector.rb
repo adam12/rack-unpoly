@@ -27,7 +27,7 @@ module Rack
       def unpoly?
         target.to_s.strip != ""
       end
-      alias up? unpoly?
+      alias_method :up?, :unpoly?
 
       # Identify if the +tested_target+ will match the actual target requested.
       #
@@ -101,7 +101,7 @@ module Rack
           elsif actual_target == "html"
             true
           elsif actual_target == "body"
-            !%w(head title meta).include?(tested_target)
+            !%w[head title meta].include?(tested_target)
           else
             false
           end

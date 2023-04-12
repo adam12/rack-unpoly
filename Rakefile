@@ -1,6 +1,7 @@
 require "minitest/test_task"
 require "rdoc/task"
 require "rubygems/tasks"
+require "standard/rake"
 
 Minitest::TestTask.create
 

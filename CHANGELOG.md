@@ -1,5 +1,6 @@
 ## master
 
+- Fix lint errors with standard (@adam12)
 - Replace Rake test task with Minitest test task (@adam12)
 - Extract version to constant (@adam12)
 - Remove echoing of `X-Up-Location` from middleware (@adam12)

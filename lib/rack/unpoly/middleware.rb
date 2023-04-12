@@ -49,10 +49,11 @@ module Rack
         headers["X-Up-Method"] = request.request_method
 
         if !request.get? && !request.env["rack.unpoly"].unpoly?
-          Rack::Utils.set_cookie_header!(headers, "_up_method",
-                                         { value: request.request_method, path: "/" })
+          Rack::Utils.set_cookie_header!(
+            headers, "_up_method", {value: request.request_method, path: "/"}
+          )
         else
-          Rack::Utils.delete_cookie_header!(headers, "_up_method", { path: "/" })
+          Rack::Utils.delete_cookie_header!(headers, "_up_method", {path: "/"})
         end
       end
     end

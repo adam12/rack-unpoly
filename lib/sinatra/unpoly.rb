@@ -52,14 +52,14 @@ module Sinatra
       def unpoly
         SinatraInspector.new(env["rack.unpoly"], response)
       end
-      alias up unpoly
+      alias_method :up, :unpoly
 
       # Determine if this is an Unpoly request.
       # @return [Boolean]
       def unpoly?
         unpoly.unpoly?
       end
-      alias up? unpoly?
+      alias_method :up?, :unpoly?
     end
 
     # @api private
