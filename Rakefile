@@ -1,12 +1,8 @@
-require "rake/testtask"
+require "minitest/test_task"
 require "rdoc/task"
 require "rubygems/tasks"
 
-Rake::TestTask.new do |t|
-  t.libs << "test"
-  t.test_files = FileList["test/test*.rb"]
-  t.verbose = true
-end
+Minitest::TestTask.create
 
 RDoc::Task.new do |rdoc|
   rdoc.main = "README.md"
