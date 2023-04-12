@@ -1,6 +1,8 @@
+require_relative "lib/rack/unpoly/version"
+
 Gem::Specification.new do |spec|
   spec.name = "rack-unpoly"
-  spec.version = "0.4.0"
+  spec.version = Rack::Unpoly::VERSION
   spec.authors = ["Adam Daniels"]
   spec.email = "adam@mediadrive.ca"
 
