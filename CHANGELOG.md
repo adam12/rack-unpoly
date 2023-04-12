@@ -1,5 +1,6 @@
 ## master
 
+- Remove echoing of `X-Up-Location` from middleware (@adam12)
 - Add YARD tags to all method docs (@adam12)
 - Mark some methods private (@adam12)
 

@@ -22,12 +22,6 @@ describe "Middleware" do
     refute_nil last_response.headers["X-Up-Method"]
   end
 
-  it "sets X-Up-Location header" do
-    get "/"
-
-    refute_nil last_response.headers["X-Up-Location"]
-  end
-
   it "sets _up_method cookie on non-GET requests" do
     post "/"
 
