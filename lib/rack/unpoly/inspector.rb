@@ -1,6 +1,8 @@
 # frozen-string-literal: true
 
 require "forwardable"
+require "json"
+require_relative "context"
 
 module Rack
   module Unpoly
@@ -20,6 +22,7 @@ module Rack
       # @api private
       def initialize(request)
         @request = request
+        @events = []
       end
 
       # Determine if this is an Unpoly request.
@@ -29,6 +32,47 @@ module Rack
       end
       alias up? unpoly?
 
+      # @return [String, nil]
+      def version
+        get_header("HTTP_X_UP_VERSION")
+      end
+
+      # @return [String, nil]
+      #
+      # @since X.X.X
+      def mode
+        get_header("HTTP_X_UP_MODE")
+      end
+
+      # @return [String, nil]
+      #
+      # @since X.X.X
+      def fail_mode
+        get_header("HTTP_X_UP_FAIL_MODE")
+      end
+
+      # @return [Hash]
+      #
+      # @since X.X.X
+      def context
+        @context ||= begin
+          value = get_header("HTTP_X_UP_CONTEXT")
+
+          Context.new(value ? JSON.parse(value) : {})
+        end
+      end
+
+      # @return [Hash]
+      #
+      # @since X.X.X
+      def fail_context
+        @fail_context ||= begin
+          value = get_header("HTTP_X_UP_FAIL_CONTEXT")
+
+          Context.new(value ? JSON.parse(value) : {})
+        end
+      end
+
       # Identify if the +tested_target+ will match the actual target requested.
       #
       # @param tested_target [String]
@@ -37,11 +81,19 @@ module Rack
         query_target(target, tested_target)
       end
 
+      # @param response [Rack::Response]
+      # @param new_target [String]
+      # @since X.X.X
+      def set_target(response, new_target)
+        return if target == new_target
+        response.headers["X-Up-Target"] = @target = new_target
+      end
+
       # The actual target as requested by Unpoly.
       #
       # @return [String, nil]
       def target
-        get_header("HTTP_X_UP_TARGET")
+        @target || get_header("HTTP_X_UP_TARGET")
       end
 
       # The CSS selector for the fragment Unpoly will update if the request fails.
@@ -49,7 +101,7 @@ module Rack
       #
       # @return [String, nil]
       def fail_target
-        get_header("HTTP_X_UP_FAIL_TARGET")
+        @target || get_header("HTTP_X_UP_FAIL_TARGET")
       end
 
       # Determine if the +tested_target+ is the current target for a failed request.
@@ -76,6 +128,37 @@ module Rack
         response.headers["X-Up-Title"] = new_title
       end
 
+      # @param response [Rack::Response]
+      # @param status [Integer]
+      def render_nothing(response, status: 200)
+        response.headers["X-Up-Target"] = ":none"
+        response.status = status
+        response.body = ""
+      end
+
+      # @param response [Rack::Response]
+      # @param pattern [String]
+      # @return [void]
+      #
+      # @since X.X.X
+      def clear_cache(response, pattern = "*")
+        response.headers["X-Up-Cache"] = pattern
+        nil
+      end
+
+      # @param type [String]
+      # @return [void]
+      #
+      # @since X.X.X
+      def emit(_type = nil, type: _type, **data)
+        raise ArgumentError, "missing type" unless type
+
+        events.push({type: type, **data})
+      end
+
+      # @since X.X.X
+      attr_accessor :events
+
       # Determine if this is a validate request.
       #
       # @return [Boolean]
@@ -97,6 +180,8 @@ module Rack
       def query_target(actual_target, tested_target)
         if up?
           if actual_target == tested_target
+            true
+          elsif actual_target.to_s.split(/,\s?/).include?(tested_target)
             true
           elsif actual_target == "html"
             true
