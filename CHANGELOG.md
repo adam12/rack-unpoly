@@ -1,5 +1,6 @@
 ## master
 
+## 0.4.1 (2023-04-12)
 - Fix lint errors with standard (@adam12)
 - Replace Rake test task with Minitest test task (@adam12)
 - Extract version to constant (@adam12)
