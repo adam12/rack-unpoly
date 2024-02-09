@@ -46,7 +46,7 @@ module Rack
       # Used internally by the middleware. Not required for normal use.
       # @api private
       def setup_protocol(request, headers)
-        headers["X-Up-Method"] = request.request_method
+        headers["x-up-method"] = request.request_method
 
         if !request.get? && !request.env["rack.unpoly"].unpoly?
           Rack::Utils.set_cookie_header!(
