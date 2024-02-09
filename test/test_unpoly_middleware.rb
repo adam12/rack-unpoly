@@ -8,6 +8,7 @@ describe "Middleware" do
 
   def app
     @app ||= Rack::Builder.app do
+      use Rack::Lint
       use Rack::Unpoly::Middleware
 
       map "/" do

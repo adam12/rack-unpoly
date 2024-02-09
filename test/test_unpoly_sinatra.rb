@@ -8,6 +8,7 @@ describe "Sinatra Plugin" do
 
   def app
     @app ||= Class.new(Sinatra::Base) do
+      use Rack::Lint
       register Sinatra::Unpoly
 
       get "/" do
