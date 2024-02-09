@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.files = ["README.md", "Rakefile"] + Dir["lib/**/*.rb"]
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "rack", ">= 2.0", "< 3.0"
+  spec.add_dependency "rack", ">= 2.0", "< 4.0"
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rubygems-tasks", "~> 0.2"
