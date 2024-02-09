@@ -1,4 +1,4 @@
-## master
+## 0.5.0 (2024-02-09)
 
 - Add `Rack::Lint` to test applications (@adam12)
 - Lowercase response header key for Rack 3 (@adam12)
