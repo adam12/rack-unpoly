@@ -1,5 +1,9 @@
 ## master
 
+- Add `Rack::Lint` to test applications (@adam12)
+- Lowercase response header key for Rack 3 (@adam12)
+- Relax `rack` dependency version (@adam12)
+
 ## 0.4.1 (2023-04-12)
 - Fix lint errors with standard (@adam12)
 - Replace Rake test task with Minitest test task (@adam12)
