@@ -3,3 +3,4 @@
 /html
 /.yardoc
 /doc
+/gemfiles/*.lock
