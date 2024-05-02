@@ -12,6 +12,8 @@ jobs:
         gemfile:
           - gemfiles/rack-2.rb
           - gemfiles/rack-3.rb
+          - gemfiles/sinatra-3.rb
+          - gemfiles/sinatra-4.rb
 
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
