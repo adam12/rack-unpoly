@@ -16,7 +16,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rack", ">= 2.0", "< 4.0"
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "rubygems-tasks", "~> 0.2"
   spec.add_development_dependency "rack-test", "~> 0.6"
   spec.add_development_dependency "sinatra"
   spec.add_development_dependency "standard", "~> 1.26"
