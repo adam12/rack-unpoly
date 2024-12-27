@@ -20,6 +20,6 @@ describe "Sinatra Plugin" do
   it "uses middleware" do
     get "/"
 
-    refute_nil last_response.headers["X-Up-Method"]
+    assert_equal "GET", last_response.headers["x-up-method"] 
   end
 end
