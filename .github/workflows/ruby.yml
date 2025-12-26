@@ -15,6 +15,7 @@ jobs:
           - '3.2'
           - '3.3'
           - '3.4'
+          - '4.0'
         gemfile:
           - gemfiles/rack-2.rb
           - gemfiles/rack-3.rb
